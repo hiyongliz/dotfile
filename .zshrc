@@ -17,8 +17,6 @@ source $ZSH/oh-my-zsh.sh
 
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-alias code='/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code'
-
 # -------------------------------- #
 # Directories
 #
@@ -73,32 +71,6 @@ function codei() {
   code "$@" && cd -
 }
 
-# nvm settings
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# pnpm
-export PNPM_HOME="/Users/lazy/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-
-# python env option
-export PATH=$PATH:/Users/lazy/Library/Python/3.9/bin:/opt/homebrew/bin:/Users/lazy/apache-maven-3.9.6/bin//opt/homebrew/opt/openssl@3/bin
-VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export WORKON_HOME=$HOME/.virtualenvs
-source /Users/lazy/Library/Python/3.9/bin/virtualenvwrapper.sh
-
-eval "$(pyenv virtualenv-init -)"
-export PATH="$HOME/.pyenv/shims:$PATH"
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 
 # load pyenv alias
 [ -f ~/.pyenv_aliases ] && source ~/.pyenv_aliases
@@ -115,12 +87,23 @@ eval "$(pyenv virtualenv-init -)"
 # load docker alias
 [ -f ~/.docker_aliases ] && source ~/.docker_aliases
 
-# proxy env settings
-export https_proxy=http://127.0.0.1:7890 
-export http_proxy=http://127.0.0.1:7890
-export all_proxy=socks5://127.0.0.1:7890
+# http proxy
+export http_proxy=http://`route -n | awk '{print $2}' | grep 172`:7890
+export https_proxy=http://`route -n | awk '{print $2}' | grep 172`:7890
+
+# go setting
+export GOPATH=/go
+export GOROOT=/usr/local/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 # kubeapi env settings
 export KUBECONFIG="/Users/lazy/admin.conf"
+
+# fnm
+FNM_PATH="/root/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
 
 [ -f ~/.aliases ] && source ~/.aliases
